@@ -1,0 +1,73 @@
+import tkinter as tk
+
+def inferencia(kb, hechos):
+    enfermedad = None
+    for sintoma, valor in hechos.items():
+        if sintoma in kb and valor in kb[sintoma]:
+            enfermedad = kb[sintoma][valor]
+            break
+    return enfermedad
+
+def diagnosticar():
+    fiebre = fiebre_var.get()
+    tos = tos_var.get()
+    dolor_cabeza = dolor_cabeza_var.get()
+
+    hechos = {
+        'fiebre': fiebre,
+        'tos': tos,
+        'dolor_cabeza': dolor_cabeza,
+    }
+
+    resultado = inferencia(knowledge_base, hechos)
+
+    if resultado:
+        resultado_label.config(text=f'El paciente podría tener {resultado}.')
+    else:
+        resultado_label.config(text='No se pudo determinar la enfermedad.')
+
+knowledge_base = {
+    'fiebre': {
+        'alta_temperatura': 'gripe',
+        'temperatura_normal': 'resfriado',
+    },
+    'tos': {
+        'fuerte': 'gripe',
+        'leve': 'resfriado',
+    },
+    'dolor_cabeza': {
+        'si': 'gripe',
+    },
+}
+
+app = tk.Tk()
+app.title("Sistema de Diagnóstico de Enfermedades")
+
+fiebre_label = tk.Label(app, text="¿Tiene fiebre? (alta_temperatura/temperatura_normal):")
+fiebre_label.pack()
+
+fiebre_var = tk.StringVar()
+fiebre_entry = tk.Entry(app, textvariable=fiebre_var)
+fiebre_entry.pack()
+
+tos_label = tk.Label(app, text="¿Tiene tos? (fuerte/leve):")
+tos_label.pack()
+
+tos_var = tk.StringVar()
+tos_entry = tk.Entry(app, textvariable=tos_var)
+tos_entry.pack()
+
+dolor_cabeza_label = tk.Label(app, text="¿Tiene dolor de cabeza? (si/no):")
+dolor_cabeza_label.pack()
+
+dolor_cabeza_var = tk.StringVar()
+dolor_cabeza_entry = tk.Entry(app, textvariable=dolor_cabeza_var)
+dolor_cabeza_entry.pack()
+
+diagnosticar_button = tk.Button(app, text="Diagnosticar", command=diagnosticar)
+diagnosticar_button.pack()
+
+resultado_label = tk.Label(app, text="")
+resultado_label.pack()
+
+app.mainloop()
